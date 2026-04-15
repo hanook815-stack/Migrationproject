@@ -25,6 +25,7 @@ WatermarkColumn
 LastLoadValue
 
 🔄 4. Pipeline Flow (Step-by-Step)
+
 🔹 Step 1: Lookup Activity
 “First, I used a Lookup activity to fetch metadata from the watermark table.”
 
