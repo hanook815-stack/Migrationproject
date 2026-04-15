@@ -1,4 +1,4 @@
-# Migrationproject
+# Migration project
 Eend-to-end data migration project where we moved data from on-prem SQL Server to Azure Data Lake using Azure Data Factory. 
 The solution is metadata-driven and supports incremental loading using a watermark mechanism.
 
