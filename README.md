@@ -135,7 +135,7 @@ WatermarkColumn = @item().WatermarkColumn
 **PIPELINE**
 
 
-<img width="846" height="228" alt="image" src="https://github.com/user-attachments/assets/d7ef8b8f-c4d9-48ce-8d8c-cd3d5a8bcc19" />
+<img width="815" height="375" alt="image" src="https://github.com/user-attachments/assets/33f217a9-ee1b-4426-83bc-cb8b0a94ea3b" />
 
 
 **Simple Diagram**
