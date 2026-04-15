@@ -74,9 +74,13 @@ TableSchema = @pipeline().parameters.TableSchema
 TableName = @pipeline().parameters.TableName
 
 Then **ForEach** is used to process multiple items (tables/files/records) dynamically in a loop
+<img width="818" height="389" alt="image" src="https://github.com/user-attachments/assets/41cc242a-64f6-413f-8e72-263bc216799e" />
+
   Under setting -- > item = @activity('LKUP_WATER_MARK').output.value
 
   Then add **lookupactivity** **inside ForEach activity** to Get latest MAX value from source table
+  <img width="800" height="552" alt="image" src="https://github.com/user-attachments/assets/74ecec55-e12d-4220-8fc4-213c0b3b9e88" />
+
       Under setting add Dataset Properties
          TableSchema = @pipeline().parameters.TableSchema
         TableName = @pipeline().parameters.TableName
@@ -90,8 +94,12 @@ Then **ForEach** is used to process multiple items (tables/files/records) dynami
 
 Next add If condition ---- IF condition decides whether to load data or skip
  **inside if condition** acitivity add **copy activity and Procedure activity**
+<img width="816" height="487" alt="image" src="https://github.com/user-attachments/assets/65ea5173-8df1-4005-a37d-12eec1ecfefe" />
 
  Copy acivity add below parameters under source
+ <img width="871" height="489" alt="image" src="https://github.com/user-attachments/assets/0da02dbf-7881-4a1e-a9be-85b621701eca" />
+ <img width="758" height="328" alt="image" src="https://github.com/user-attachments/assets/2dae6340-775e-49bf-811e-cb93d7d2088e" />
+
            TableSchema = @pipeline().parameters.TableSchema
           TableName = @pipeline().parameters.TableName
 
@@ -112,6 +120,7 @@ Next add If condition ---- IF condition decides whether to load data or skip
 Add dataset parameters TableName = @item().TableName
 
 Now crate Store procedure and link with Copy activity -- > procedure ( We execute them only when new data is available) 
+<img width="788" height="477" alt="image" src="https://github.com/user-attachments/assets/75743385-8aca-4131-80cd-619a7c424400" />
 
 select store procedure name -- updatewatermark table
 Copy activity -- Only runs when new data availabel
