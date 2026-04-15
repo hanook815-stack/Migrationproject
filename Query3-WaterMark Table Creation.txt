@@ -1,0 +1,30 @@
+CREATE TABLE dbo.ADF_Watermark_Table (
+    TableSchema   VARCHAR(50)  NULL,
+   TableName       VARCHAR(200) NULL,
+   WatermarkColumn VARCHAR(100) NULL,
+   LastLoadValue   BIGINT       NULL
+);
+
+INSERT INTO dbo.ADF_Watermark_Table (TableSchema, TableName, WatermarkColumn, LastLoadValue)
+ VALUES
+ -- Dimension Tables
+ ('dbo','DimCustomer','CustomerKey',0),
+ ('dbo','DimProduct','ProductKey',0),
+ ('dbo','DimStore','StoreKey',0), 
+('dbo','DimEmployee','EmployeeKey',0),
+ ('dbo','DimPromotion','PromotionKey',0), 
+('dbo','DimRegion','RegionKey',0),
+ ('dbo','DimCategory','CategoryKey',0), 
+('dbo','DimPaymentMethod','PaymentMethodKey',0), 
+('dbo','DimSupplier','SupplierKey',0),
+ ('dbo','DimDate','DateKey',0), 
+-- Fact Tables
+ ('dbo','FactSales','SalesKey',0), 
+('dbo','FactOrders','OrderKey',0),
+ ('dbo','FactPayments','PaymentKey',0), 
+('dbo','FactInventory','InventoryKey',0),
+ ('dbo','FactReturns','ReturnKey',0),
+ ('dbo','FactShipment','ShipmentKey',0),
+ ('dbo','FactStoreSales','StoreSalesKey',0),
+ ('dbo','FactCustomerActivity','ActivityKey',0), ('dbo','FactProductPerformance','PerformanceKey',0),
+ ('dbo','FactDiscounts','DiscountKey',0);

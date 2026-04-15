@@ -1,0 +1,232 @@
+=====================================================================
+=======================Populate DIM tables =======================
+=====================================================================
+1. DimCustomer
+INSERT INTO DimCustomer
+(CustomerID, FirstName, LastName, Email, City, Country, StartDate, EndDate, IsCurrent)
+SELECT TOP 10000
+ROW_NUMBER() OVER(ORDER BY (SELECT NULL)),
+'First'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR),
+'Last'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR),
+'customer'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR)+'@mail.com',
+'City'+CAST(ABS(CHECKSUM(NEWID()))%200 AS VARCHAR),
+'INDIA',
+DATEADD(YEAR,-ABS(CHECKSUM(NEWID()))%5,GETDATE()),
+NULL,
+1
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+2. DimProduct
+INSERT INTO DimProduct
+(ProductID, ProductName, Category, Price)
+SELECT TOP 1000
+ROW_NUMBER() OVER(ORDER BY (SELECT NULL)),
+'Product'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR),
+CASE 
+WHEN ROW_NUMBER() OVER(ORDER BY (SELECT NULL))%5=0 THEN 'Electronics'
+WHEN ROW_NUMBER() OVER(ORDER BY (SELECT NULL))%5=1 THEN 'Clothing'
+WHEN ROW_NUMBER() OVER(ORDER BY (SELECT NULL))%5=2 THEN 'Home'
+WHEN ROW_NUMBER() OVER(ORDER BY (SELECT NULL))%5=3 THEN 'Sports'
+ELSE 'Toys'
+END,
+ABS(CHECKSUM(NEWID()))%1000 + 10
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+3. DimStore
+INSERT INTO DimStore
+(StoreID, StoreName, City, Region)
+SELECT TOP 50
+ROW_NUMBER() OVER(ORDER BY (SELECT NULL)),
+'Store'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR),
+'City'+CAST(ABS(CHECKSUM(NEWID()))%100 AS VARCHAR),
+'Region'+CAST(ABS(CHECKSUM(NEWID()))%10 AS VARCHAR)
+FROM sys.objects;
+-------------------------------------------------------------------------------------
+4. DimEmployee
+INSERT INTO DimEmployee
+(EmployeeID, EmployeeName, Role, StoreID)
+SELECT TOP 200
+ROW_NUMBER() OVER(ORDER BY (SELECT NULL)),
+'Employee'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR),
+'Sales',
+ABS(CHECKSUM(NEWID()))%50 + 1
+FROM sys.objects;
+-------------------------------------------------------------------------------------
+
+5. DimPromotion
+INSERT INTO DimPromotion
+(PromotionName, DiscountPercent, StartDate, EndDate)
+VALUES
+('NewYearSale',10,'2024-01-01','2024-01-31'),
+('FestivalSale',20,'2024-10-01','2024-10-31'),
+('SummerSale',15,'2024-04-01','2024-04-30'),
+('Clearance',30,'2024-12-01','2024-12-31');
+-------------------------------------------------------------------------------------
+6. DIMregion
+INSERT INTO DimRegion (RegionName, Country)
+VALUES
+('North','India'),
+('South','India'),
+('East','India'),
+('West','India'),
+('Central','India');
+-------------------------------------------------------------------------------------
+7. DimCategory
+INSERT INTO DimCategory (CategoryName)
+VALUES ('Electronics'),('Clothing'),('Home'),('Sports'),('Toys');
+-------------------------------------------------------------------------------------
+8. DimPaymentMethod
+INSERT INTO DimPaymentMethod (PaymentMethodName)
+VALUES
+('Credit Card'),
+('Debit Card'),
+('Cash'),
+('UPI'),
+('Online');
+-------------------------------------------------------------------------------------
+9. DimSupplier
+INSERT INTO DimSupplier
+(SupplierID, SupplierName, City, Country)
+SELECT TOP 100
+ROW_NUMBER() OVER(ORDER BY (SELECT NULL)),
+'Supplier'+CAST(ROW_NUMBER() OVER(ORDER BY (SELECT NULL)) AS VARCHAR),
+'City'+CAST(ABS(CHECKSUM(NEWID()))%50 AS VARCHAR),
+'USA'
+FROM sys.objects;
+-------------------------------------------------------------------------------------
+10. DimDate
+DECLARE @StartDate DATE='2020-01-01'
+DECLARE @EndDate DATE='2024-12-31'
+
+WHILE @StartDate<=@EndDate
+BEGIN
+
+INSERT INTO DimDate
+(DateKey, FullDate, Year, Quarter, Month, Day)
+VALUES
+(
+CONVERT(INT,FORMAT(@StartDate,'yyyyMMdd')),
+@StartDate,
+YEAR(@StartDate),
+DATEPART(QUARTER,@StartDate),
+MONTH(@StartDate),
+DAY(@StartDate)
+)
+
+SET @StartDate=DATEADD(DAY,1,@StartDate)
+
+END
+-------------------------------------------------------------------------------------
+-------------------------------------------------------------------------------------
+==========     FACT TBLES ====================================================
+
+1.FactSales
+INSERT INTO FactSales
+(DateKey, CustomerKey, ProductKey, StoreKey, Quantity, SalesAmount, DiscountAmount)
+SELECT TOP 500000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%5000 + 1,
+ABS(CHECKSUM(NEWID()))%1000 + 1,
+ABS(CHECKSUM(NEWID()))%50 + 1,
+ABS(CHECKSUM(NEWID()))%5 + 1,
+ABS(CHECKSUM(NEWID()))%1000 + 50,
+ABS(CHECKSUM(NEWID()))%100
+FROM sys.objects a CROSS JOIN sys.objects b CROSS JOIN sys.objects c;
+-------------------------------------------------------------------------------------
+2.FactOrders
+INSERT INTO FactOrders
+(DateKey, CustomerKey, StoreKey, OrderAmount)
+SELECT TOP 300000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%5000 + 1,
+ABS(CHECKSUM(NEWID()))%50 + 1,
+ABS(CHECKSUM(NEWID()))%1000 + 100
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+3.FactPayments
+INSERT INTO FactPayments
+(DateKey, CustomerKey, PaymentMethodKey, Amount)
+SELECT TOP 200000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%5000 + 1,
+ABS(CHECKSUM(NEWID()))%5 + 1,
+ABS(CHECKSUM(NEWID()))%2000
+FROM sys.objects a CROSS JOIN sys.objects b;
+
+-------------------------------------------------------------------------------------
+4.FactInventory
+INSERT INTO FactInventory
+(DateKey, ProductKey, StoreKey, StockLevel)
+SELECT TOP 100000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%1000 + 1,
+ABS(CHECKSUM(NEWID()))%50 + 1,
+ABS(CHECKSUM(NEWID()))%500
+FROM sys.objects a CROSS JOIN sys.objects b;
+
+-------------------------------------------------------------------------------------
+5.FactReturns
+INSERT INTO FactReturns
+(DateKey, CustomerKey, ProductKey, ReturnAmount)
+SELECT TOP 50000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%5000 + 1,
+ABS(CHECKSUM(NEWID()))%1000 + 1,
+ABS(CHECKSUM(NEWID()))%300
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+6.FactShipment
+INSERT INTO FactShipment
+(DateKey, StoreKey, SupplierKey, ShipmentQuantity)
+SELECT TOP 150000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%50 + 1,
+ABS(CHECKSUM(NEWID()))%100 + 1,
+ABS(CHECKSUM(NEWID()))%500
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+7.FactStoreSales
+INSERT INTO FactStoreSales
+(DateKey, StoreKey, TotalSales)
+SELECT TOP 100000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID())) % 50 + 1,
+ABS(CHECKSUM(NEWID())) % 5000 + 500
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+8..FactCustomerActivity
+INSERT INTO FactCustomerActivity
+(DateKey, CustomerKey, ActivityType)
+SELECT TOP 100000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID())) % 5000 + 1,
+CASE 
+    WHEN ABS(CHECKSUM(NEWID())) % 3 = 0 THEN 'Login'
+    WHEN ABS(CHECKSUM(NEWID())) % 3 = 1 THEN 'Purchase'
+    ELSE 'Browse'
+END
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------
+9.FactProductPerformance
+INSERT INTO FactProductPerformance
+(DateKey, ProductKey, UnitsSold, Revenue)
+
+SELECT TOP 100000
+d.DateKey,
+ABS(CHECKSUM(NEWID())) % 1000 + 1,
+ABS(CHECKSUM(NEWID())) % 50 + 1,
+ABS(CHECKSUM(NEWID())) % 5000 + 100
+
+FROM DimDate d
+CROSS JOIN sys.objects a;
+-------------------------------------------------------------------------------------
+10.FactDiscounts
+INSERT INTO FactDiscounts
+(DateKey, PromotionKey, ProductKey, DiscountAmount)
+SELECT TOP 50000
+(SELECT TOP 1 DateKey FROM DimDate ORDER BY NEWID()),
+ABS(CHECKSUM(NEWID()))%4 + 1,
+ABS(CHECKSUM(NEWID()))%1000 + 1,
+ABS(CHECKSUM(NEWID()))%200
+FROM sys.objects a CROSS JOIN sys.objects b;
+-------------------------------------------------------------------------------------

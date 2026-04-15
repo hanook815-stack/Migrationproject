@@ -1,0 +1,9 @@
+End-to-end data migration project where we migrated data from on-prem SQL Server to Azure Data Lake using Azure Data Factory.
+
+We implemented a metadata-driven approach using a watermark table to track incremental loads. The pipeline starts with a Lookup activity to fetch table metadata, followed by a ForEach loop to process multiple tables dynamically.
+
+Inside the loop, we use another Lookup to get the latest MAX value from the source table. Then, an IF condition compares this value with the last loaded watermark value to determine whether new data exists.
+
+If new data is available, a Copy Activity loads the data into ADLS in Parquet format with dynamic partitioning. After successful load, a stored procedure updates the watermark table.
+
+This design ensures efficient incremental loading, avoids duplicate processing, and improves performance. I also handled challenges like parameter mapping issues, expression errors, and ADLS sink configurations during implementation.

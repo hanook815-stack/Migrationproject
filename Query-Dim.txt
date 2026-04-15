@@ -1,0 +1,87 @@
+==================Create Dimension Tables==========================================
+1..DimCustomer[dbo].[DimCustomer]
+
+CREATE TABLE DimCustomer (
+CustomerKey INT IDENTITY(1,1) PRIMARY KEY,
+CustomerID INT,
+FirstName VARCHAR(50),
+LastName VARCHAR(50),
+Email VARCHAR(100),
+City VARCHAR(50),
+Country VARCHAR(50),
+StartDate DATE,
+EndDate DATE,
+IsCurrent BIT
+);
+
+2 DimProduct[dbo].[DimProduct]
+CREATE TABLE DimProduct (
+ProductKey INT IDENTITY(1,1) PRIMARY KEY,
+ProductID INT,
+ProductName VARCHAR(100),
+Category VARCHAR(50),
+Price DECIMAL(10,2)
+);
+
+3 DimStore [dbo].[DimStore]
+CREATE TABLE DimStore (
+StoreKey INT IDENTITY(1,1) PRIMARY KEY,
+StoreID INT,
+StoreName VARCHAR(100),
+City VARCHAR(50),
+Region VARCHAR(50)
+);
+
+4 DimEmployee[dbo].[DimEmployee]
+CREATE TABLE DimEmployee (
+EmployeeKey INT IDENTITY PRIMARY KEY,
+EmployeeID INT,
+EmployeeName VARCHAR(100),
+Role VARCHAR(50),
+StoreID INT
+);
+
+5 DimPromotion [dbo].[DimPromotion]
+CREATE TABLE DimPromotion (
+PromotionKey INT IDENTITY PRIMARY KEY,
+PromotionName VARCHAR(100),
+DiscountPercent DECIMAL(5,2),
+StartDate DATE,
+EndDate DATE
+)
+6  DimRegion [dbo].[DimRegion]
+CREATE TABLE DimRegion (
+RegionKey INT IDENTITY PRIMARY KEY,
+RegionName VARCHAR(100),
+Country VARCHAR(50)
+);
+7 ) DimCategory [dbo].[DimCategory]
+CREATE TABLE DimCategory (
+CategoryKey INT IDENTITY PRIMARY KEY,
+CategoryName VARCHAR(100)
+);
+
+8)DimPaymentMethod	[dbo].[DimPaymentMethod]
+CREATE TABLE DimPaymentMethod (
+PaymentMethodKey INT IDENTITY PRIMARY KEY,
+PaymentMethodName VARCHAR(50)
+);
+9 )
+DimSupplier [dbo].[DimSupplier]
+CREATE TABLE DimSupplier (
+SupplierKey INT IDENTITY PRIMARY KEY,
+SupplierID INT,
+SupplierName VARCHAR(100),
+City VARCHAR(50),
+Country VARCHAR(50)
+);
+10)DimDate[dbo].[DimDate]
+CREATE TABLE DimDate (
+DateKey INT PRIMARY KEY,
+FullDate DATE,
+Year INT,
+Quarter INT,
+Month INT,
+Day INT
+);
+

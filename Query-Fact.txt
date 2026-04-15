@@ -1,0 +1,83 @@
+===============Create Fact Tables===========================================
+
+1 FactSales [dbo].[FactSales]
+CREATE TABLE FactSales (
+SalesKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+CustomerKey INT,
+ProductKey INT,
+StoreKey INT,
+Quantity INT,
+SalesAmount DECIMAL(10,2),
+DiscountAmount DECIMAL(10,2)
+);
+2 FactOrders 	[dbo].[FactOrders]
+CREATE TABLE FactOrders (
+OrderKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+CustomerKey INT,
+StoreKey INT,
+OrderAmount DECIMAL(10,2)
+);
+3 FactPayments  [dbo].[FactPayments]
+CREATE TABLE FactPayments (
+PaymentKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+CustomerKey INT,
+PaymentMethodKey INT,
+Amount DECIMAL(10,2)
+);
+4 FactInventory [dbo].[FactInventory]
+CREATE TABLE FactInventory (
+InventoryKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+ProductKey INT,
+StoreKey INT,
+StockLevel INT
+);
+5 FactReturns [dbo].[FactReturns]
+CREATE TABLE FactReturns (
+ReturnKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+CustomerKey INT,
+ProductKey INT,
+ReturnAmount DECIMAL(10,2)
+);
+6 FactShipment [dbo].[FactShipment]
+CREATE TABLE FactShipment (
+ShipmentKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+StoreKey INT,
+SupplierKey INT,
+ShipmentQuantity INT
+);
+7 FactStoreSales [dbo].[FactStoreSales]
+CREATE TABLE FactStoreSales (
+StoreSalesKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+StoreKey INT,
+TotalSales DECIMAL(10,2)
+);
+8 FactCustomerActivity [dbo].[FactCustomerActivity]
+CREATE TABLE FactCustomerActivity (
+ActivityKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+CustomerKey INT,
+ActivityType VARCHAR(50)
+);
+9 FactProductPerformance [dbo].[FactProductPerformance]
+CREATE TABLE FactProductPerformance (
+PerformanceKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+ProductKey INT,
+UnitsSold INT,
+Revenue DECIMAL(10,2)
+);
+10 FactDiscounts [dbo].[FactDiscounts]
+CREATE TABLE FactDiscounts (
+DiscountKey BIGINT IDENTITY PRIMARY KEY,
+DateKey INT,
+PromotionKey INT,
+ProductKey INT,
+DiscountAmount DECIMAL(10,2)
+);
