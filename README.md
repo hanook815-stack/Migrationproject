@@ -132,6 +132,9 @@ TableName = @item().TableName
 TableSchema = @item().TableSchema
 WatermarkColumn = @item().WatermarkColumn
 
+**PIPELINE**
+<img width="846" height="228" alt="image" src="https://github.com/user-attachments/assets/d7ef8b8f-c4d9-48ce-8d8c-cd3d5a8bcc19" />
+
 
 **Simple Diagram**
 
